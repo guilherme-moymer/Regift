@@ -206,6 +206,44 @@ public struct Regift {
 
         self.loopCount = loopCount
     }
+    
+    /**
+        Get the URL of the GIF created with the attributes provided in the initializer.
+        - returns: The path to the created GIF, or `nil` if there was an error creating it.
+    */
+    public func createGif() -> URL? {
+
+        let fileProperties = [kCGImagePropertyGIFDictionary as String:[
+            kCGImagePropertyGIFLoopCount as String: NSNumber(value: Int32(loopCount) as Int32)],
+            kCGImagePropertyGIFHasGlobalColorMap as String: NSValue(nonretainedObject: true)
+        ] as [String : Any]
+        
+        let frameProperties = [
+            kCGImagePropertyGIFDictionary as String:[
+                kCGImagePropertyGIFDelayTime as String:delayTime
+            ]
+        ]
+
+        // How far along the video track we want to move, in seconds.
+        let increment = Float(duration) / Float(frameCount)
+        
+        // Add each of the frames to the buffer
+        var timePoints: [TimePoint] = []
+        
+        for frameNumber in 0 ..< frameCount {
+            let seconds: Float64 = Float64(startTime) + (Float64(increment) * Float64(frameNumber))
+            let time = CMTimeMakeWithSeconds(seconds, Constants.TimeInterval)
+            
+            timePoints.append(time)
+        }
+        
+        do {
+            return try createGIFForTimePoints(timePoints, fileProperties: fileProperties as [String : AnyObject], frameProperties: frameProperties as [String : AnyObject], frameCount: frameCount)
+            
+        } catch {
+            return nil
+        }
+    }
 
     /**
         Get the URL of the GIF created with the attributes provided in the initializer.
@@ -246,44 +284,6 @@ public struct Regift {
         }
     }
     
-    /**
-        Get the URL of the GIF created with the attributes provided in the initializer.
-        - returns: The path to the created GIF, or `nil` if there was an error creating it.
-    */
-    public func createGif() -> URL? {
-
-        let fileProperties = [kCGImagePropertyGIFDictionary as String:[
-            kCGImagePropertyGIFLoopCount as String: NSNumber(value: Int32(loopCount) as Int32)],
-            kCGImagePropertyGIFHasGlobalColorMap as String: NSValue(nonretainedObject: true)
-        ] as [String : Any]
-        
-        let frameProperties = [
-            kCGImagePropertyGIFDictionary as String:[
-                kCGImagePropertyGIFDelayTime as String:delayTime
-            ]
-        ]
-
-        // How far along the video track we want to move, in seconds.
-        let increment = Float(duration) / Float(frameCount)
-        
-        // Add each of the frames to the buffer
-        var timePoints: [TimePoint] = []
-        
-        for frameNumber in 0 ..< frameCount {
-            let seconds: Float64 = Float64(startTime) + (Float64(increment) * Float64(frameNumber))
-            let time = CMTimeMakeWithSeconds(seconds, Constants.TimeInterval)
-            
-            timePoints.append(time)
-        }
-        
-        do {
-            return try createGIFForTimePoints(timePoints, fileProperties: fileProperties as [String : AnyObject], frameProperties: frameProperties as [String : AnyObject], frameCount: frameCount)
-            
-        } catch {
-            return nil
-        }
-    }
-
     /**
         Create a GIF using the given time points in a movie file stored in this Regift's `asset`.
     
