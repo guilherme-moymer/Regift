@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/matthewpalmer/Regift"
   s.license          = 'MIT'
   s.author           = { "matthewpalmer" => "matt@matthewpalmer.net" }
-  s.source           = { :git => "https://github.com/matthewpalmer/Regift.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/guilherme-moymer/Regift.git", :branch => 'master' }
   s.social_media_url = 'https://twitter.com/_matthewpalmer'
 
   s.ios.deployment_target = '8.0'
