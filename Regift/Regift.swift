@@ -349,7 +349,7 @@ public struct Regift {
                 return
             }
             
-            let resizedImage = resizeCGImage(image: imageRef, width: 117, height: 208)
+            let resizedImage = self.resizeCGImage(image: imageRef, width: 117, height: 208)
                                                                                       
             CGImageDestinationAddImage(destination, imageRef, frameProperties as CFDictionary)
 
