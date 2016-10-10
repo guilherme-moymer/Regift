@@ -349,7 +349,7 @@ public struct Regift {
                 return
             }
             
-            let resizedImage = self.resizeCGImage(image: imageRef, width: 117, height: 208)
+            let resizedImage = resizeCGImage(image: imageRef, width: 117, height: 208)
                                                                                       
             CGImageDestinationAddImage(destination, imageRef, frameProperties as CFDictionary)
 
@@ -375,9 +375,8 @@ public struct Regift {
         
         return fileURL!
     }
-}
-
-func resizeCGImage(image: CGImage, width: CGFloat, height: CGFloat) -> CGImage? {
+    
+    func resizeCGImage(image: CGImage, width: CGFloat, height: CGFloat) -> CGImage? {
         
         // create context, keeping original image properties
         let colorspace = image.colorSpace
@@ -395,4 +394,5 @@ func resizeCGImage(image: CGImage, width: CGFloat, height: CGFloat) -> CGImage? 
         let imgRef = context.makeImage()
         
         return imgRef
+    }
 }
