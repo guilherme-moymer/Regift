@@ -348,7 +348,9 @@ public struct Regift {
                 gifGroup.leave()
                 return
             }
-
+            
+            let resizedImage = self.resizeCGImage(image: imageRef, width: 117, height: 208)
+                                                                                      
             CGImageDestinationAddImage(destination, imageRef, frameProperties as CFDictionary)
 
             if requestedTime == times.last?.timeValue {
@@ -373,4 +375,24 @@ public struct Regift {
         
         return fileURL!
     }
+}
+
+func resizeCGImage(image: CGImage, width: CGFloat, height: CGFloat) -> CGImage? {
+        
+        // create context, keeping original image properties
+        let colorspace = image.colorSpace
+        guard let context = CGContext(data: nil, width: Int(width), height: Int(height),
+                                bitsPerComponent: image.bitsPerComponent,
+                                bytesPerRow: image.bytesPerRow,
+                                space: colorspace!,
+                                bitmapInfo: image.alphaInfo.rawValue) else {
+            return nil
+        }
+        
+        // draw image to context (resizing it)
+        context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+        // extract resulting image from context
+        let imgRef = context.makeImage()
+        
+        return imgRef
 }
