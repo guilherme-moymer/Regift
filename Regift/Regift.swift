@@ -264,7 +264,7 @@ public struct Regift {
         ]
 
         // How far along the video track we want to move, in seconds.
-        let increment = Float(duration) / (Float(frameCount)/2)
+        let increment = Float(duration) / Float(frameCount)
         
         // Add each of the frames to the buffer
         var timePoints: [TimePoint] = []
@@ -277,7 +277,7 @@ public struct Regift {
         }
         
         for frameNumber in (0 ..< frameCount/2).reversed() {
-            let seconds: Float64 = Float64(startTime) + (Float64(increment) * Float64(frameNumber)) + 0.01
+            let seconds: Float64 = Float64(startTime) + (Float64(increment) * Float64(frameNumber)) + 0.008
             let time = CMTimeMakeWithSeconds(seconds, Constants.TimeInterval)
             
             timePoints.append(time)
@@ -351,7 +351,7 @@ public struct Regift {
             
             let resizedImage = self.resizeCGImage(image: imageRef, width: 117, height: 208)
                                                                                       
-            CGImageDestinationAddImage(destination, imageRef, frameProperties as CFDictionary)
+            CGImageDestinationAddImage(destination, resizedImage!, frameProperties as CFDictionary)
 
             if requestedTime == times.last?.timeValue {
                 gifGroup.leave()
